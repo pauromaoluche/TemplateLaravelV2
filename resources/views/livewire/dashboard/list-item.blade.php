@@ -4,8 +4,7 @@
             <div class="btn-group" role="group" aria-label="Basic example">
                 <a href="{{ route($route . '.create') }}" type="button" class="btn btn-success">Adicionar</a>
                 @can('manage-users')
-                    <button type="button" class="btn btn-danger" wire:click="deleteSelected"
-                        wire:confirm="Tem certeza que deseja remover os itens selecionados?">Remover Selecionados</button>
+                    <button type="button" class="btn btn-danger" wire:click="confirmDeleteSelected">Remover Selecionados</button>
                 @endcan
             </div>
         </div>
@@ -46,7 +45,7 @@
                     <td class="text-center">
                         <div class="btn-group" role="group" aria-label="Basic example">
                             <a href="#" type="button" class="btn btn-outline-success">Editar</a>
-                            <a data-route="#" class="btn btn-outline-danger delete">Excluir</a>
+                             <button type="button" class="btn btn-outline-danger" wire:click="confirmDelete({{ $item->id }})">Excluir</button>
                         </div>
                     </td>
                 </tr>

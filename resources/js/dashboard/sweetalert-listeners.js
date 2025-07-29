@@ -29,7 +29,7 @@ document.addEventListener('livewire:initialized', () => {
             cancelButtonText: data.cancelButtonText || 'Cancelar'
         }).then((result) => {
             if (result.isConfirmed) {
-                Livewire.dispatch(data.onConfirmedEvent, data.onConfirmedParams || {});
+                Livewire.dispatch(data.onConfirmedEvent, [data.onConfirmedParams] || {});
             }
         });
     });
