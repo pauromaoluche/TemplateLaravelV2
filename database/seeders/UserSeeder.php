@@ -19,6 +19,7 @@ class UserSeeder extends Seeder
             'email' => 'adminweb@hotmail.com',
             'email_verified_at' => now(),
             'password' => bcrypt('admwaas@.'),
+            'is_admin' => true,
             'remember_token' => Str::random(10),
         ]);
     }

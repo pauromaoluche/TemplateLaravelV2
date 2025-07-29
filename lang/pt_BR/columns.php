@@ -6,5 +6,6 @@ return [
     'value' => 'Valor',
     'text' => 'Texto',
     'code' => 'Código',
+    'description' => 'Descrição',
     'active' => 'Ativo',
 ];
