@@ -14,16 +14,16 @@ Breadcrumbs::for('dashboard.index', function (BreadcrumbTrail $trail) {
 });
 
 foreach ($items as $key => $item) {
-    if (!Breadcrumbs::exists("{$key}.index") && Route::has("{$key}.index")) {
-        Breadcrumbs::for("{$key}.index", function (BreadcrumbTrail $trail) use ($item, $key) {
+    if (!Breadcrumbs::exists($key) && Route::has($key)) {
+        Breadcrumbs::for($key, function (BreadcrumbTrail $trail) use ($item, $key) {
             $trail->parent("dashboard.index");
-            $trail->push($item, route("{$key}.index"));
+            $trail->push($item, route($key));
         });
     }
 
     if (!Breadcrumbs::exists("{$key}.create") && Route::has("{$key}.create")) {
         Breadcrumbs::for("{$key}.create", function (BreadcrumbTrail $trail) use ($item, $key) {
-            $trail->parent("{$key}.index");
+            $trail->parent($key);
             $trail->push("Criar $item", route("{$key}.create"));
         });
     }
