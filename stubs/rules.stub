@@ -1,0 +1,13 @@
+<?php
+
+namespace App\Rules;
+
+class {{ class }}Rules
+{
+    public static function rules(): array
+    {
+        return [
+            {{ rules }}
+        ];
+    }
+}
