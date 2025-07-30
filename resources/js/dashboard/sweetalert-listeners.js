@@ -33,4 +33,20 @@ document.addEventListener('livewire:initialized', () => {
             }
         });
     });
+
+        Livewire.on('swal:redirect', (event) => {
+        const data = event[0];
+        Swal.fire({
+            title: data.title || 'Sucesso',
+            text: data.text || 'Item criado com sucesso!',
+            icon: data.icon || 'success',
+            confirmButtonText: 'Ok'
+        }).then((result) => {
+            if (result.isConfirmed) {
+               if (data.redirectUrl) {
+                    window.location.reload();
+                }
+            }
+        });
+    });
 });

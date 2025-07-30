@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Livewire\Dashboard;
+namespace App\Livewire\Dashboard\Components;
 
 use App\Services\AuxService;
+use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\On;
@@ -84,29 +85,16 @@ class ListItem extends Component
             $this->dispatch('swal:message', ['icon' => 'error', 'title' => 'Erro!', 'text' => 'ID do item não fornecido para exclusão.']);
             return;
         }
-        try {
-            $deleted = $this->auxService->delete($this->model, $id);
 
-            if ($deleted) {
-                $this->reloadData();
-                $this->dispatch('swal:message', [
-                    'icon' => 'success',
-                    'title' => 'Sucesso!',
-                    'text' => 'Item deletado com sucesso.'
-                ]);
-            } else {
-                $this->dispatch('swal:message', [
-                    'icon' => 'error',
-                    'title' => 'Erro!',
-                    'text' => 'Item não encontrado.'
-                ]);
-            }
+        try {
+            $this->auxService->delete($this->model, $id);
+
+            $this->reloadData();
+            $this->dispatch('swal:message', ['icon' => 'success', 'title' => 'Sucesso!', 'text' => 'Item deletado com sucesso.']);
         } catch (AuthorizationException $e) {
-            $this->dispatch('swal:message', [
-                'icon' => 'error',
-                'title' => 'Acesso negado!',
-                'text' => $e->getMessage()
-            ]);
+            $this->dispatch('swal:message', ['icon' => 'error', 'title' => 'Acesso negado!', 'text' => $e->getMessage()]);
+        } catch (Exception $e) {
+            $this->dispatch('swal:message', ['icon' => 'error', 'title' => 'Ocorreu um erro', 'text' => $e->getMessage()]);
         }
     }
 
@@ -124,35 +112,21 @@ class ListItem extends Component
         }
 
         try {
-            $deleted = $this->auxService->deleteItems($this->model, $this->selectedItems);
+            $this->auxService->deleteItems($this->model, $this->selectedItems);
 
-            if ($deleted) {
-                $this->reloadData();
-                $this->reset(['selectedItems', 'selectAll']);
-                $this->dispatch('swal:message', [
-                    'icon' => 'success',
-                    'title' => 'Sucesso!',
-                    'text' => 'Itens selecionados deletados com sucesso!'
-                ]);
-            } else {
-                $this->dispatch('swal:message', [
-                    'icon' => 'error',
-                    'title' => 'Erro!',
-                    'text' => 'Itens não encontrado.'
-                ]);
-            }
+            $this->reloadData();
+            $this->reset(['selectedItems', 'selectAll']);
+            $this->dispatch('swal:message', ['icon' => 'success', 'title' => 'Sucesso!', 'text' => 'Itens deletados com sucesso!']);
         } catch (AuthorizationException $e) {
-            $this->dispatch('swal:message', [
-                'icon' => 'error',
-                'title' => 'Acesso negado!',
-                'text' => $e->getMessage()
-            ]);
+            $this->dispatch('swal:message', ['icon' => 'error', 'title' => 'Acesso negado!', 'text' => $e->getMessage()]);
+        } catch (Exception $e) {
+            $this->dispatch('swal:message', ['icon' => 'error', 'title' => 'Ocorreu um erro', 'text' => $e->getMessage()]);
         }
     }
 
     public function render()
     {
-        return view('livewire.dashboard.list-item', [
+        return view('livewire.dashboard.components.list-item', [
             'data' => $this->data,
             'route' => $this->route,
         ]);

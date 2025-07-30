@@ -1,6 +1,4 @@
-@extends('dashboard.layouts.app')
-@section('title', 'Pagina Principal')
-@section('content')
+<div>
     <x-dashboard.ui.breadcrumb />
     <div class="row">
         {{-- fazer foreach --}}
@@ -102,8 +100,8 @@
                     </div>
                     <h4 class="small font-weight-bold">Account Setup <span class="float-right">Complete!</span></h4>
                     <div class="progress">
-                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="100"
-                            aria-valuemin="0" aria-valuemax="100"></div>
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%"
+                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                 </div>
             </div>
@@ -184,8 +182,8 @@
                         <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
                             src="img/undraw_posting_photo.svg" alt="...">
                     </div>
-                    <p>Add some quality, svg illustrations to your project courtesy of <a target="_blank" rel="nofollow"
-                            href="https://undraw.co/">unDraw</a>,
+                    <p>Add some quality, svg illustrations to your project courtesy of <a target="_blank"
+                            rel="nofollow" href="https://undraw.co/">unDraw</a>,
                         a
                         constantly updated collection of beautiful svg images that you can use
                         completely free and without attribution!</p>
@@ -213,4 +211,4 @@
 
         </div>
     </div>
-@endsection
+</div>

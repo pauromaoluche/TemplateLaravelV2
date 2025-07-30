@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('institutionals', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('value')->nullable();
+            $table->string('value');
             $table->string('code')->unique();
             $table->boolean('active')->default(1);
             $table->timestamps();

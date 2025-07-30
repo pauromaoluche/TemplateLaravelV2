@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Laravel - @yield('title')</title>
+    <title>Laravel - {{ $title ?? 'Dashboard' }}</title>
 
     @vite(['resources/js/dashboard/app.js', 'resources/css/dashboard/sb-admin-2.css'])
 </head>
@@ -14,22 +14,22 @@
 
 
     <div id="wrapper">
-        @include('dashboard.layouts._sidebar')
-        <div id="content-wrapper" class="d-flex flex-column">
-            <div id="content">
-                @include('dashboard.layouts._navbar')
-                <main class="container-fluid">
-                    @yield('content')
-                </main>
-            </div>
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
-                    </div>
+        <livewire:dashboard.layouts._side-bar>
+            <div id="content-wrapper" class="d-flex flex-column">
+                <div id="content">
+                    <livewire:dashboard.layouts._nav-bar>
+                    <main class="container-fluid">
+                        {{ $slot }}
+                    </main>
                 </div>
-            </footer>
-        </div>
+                <footer class="sticky-footer bg-white">
+                    <div class="container my-auto">
+                        <div class="copyright text-center my-auto">
+                            <span>Copyright &copy; Your Website 2021</span>
+                        </div>
+                    </div>
+                </footer>
+            </div>
     </div>
 
 

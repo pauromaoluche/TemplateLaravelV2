@@ -2,9 +2,10 @@
     @if ($route !== 'menualias')
         <div class="btn d-flex justify-content-end">
             <div class="btn-group" role="group" aria-label="Basic example">
-                <a href="{{ route($route . '.create') }}" type="button" class="btn btn-success">Adicionar</a>
-                @can('manage-users')
-                    <button type="button" class="btn btn-danger" wire:click="confirmDeleteSelected">Remover Selecionados</button>
+                <a href="{{ route($route . '.create') }}" wire:navigate type="button" class="btn btn-success">Adicionar</a>
+                @can('admin')
+                    <button type="button" class="btn btn-danger" wire:click="confirmDeleteSelected">Remover
+                        Selecionados</button>
                 @endcan
             </div>
         </div>
@@ -32,7 +33,8 @@
                 <tr class="data-row">
                     <th scope="row">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="{{ $item->id }}" wire:model.live="selectedItems">
+                            <input class="form-check-input" type="checkbox" value="{{ $item->id }}"
+                                wire:model.live="selectedItems">
                         </div>
                     </th>
                     @foreach ($columns as $column)
@@ -45,7 +47,8 @@
                     <td class="text-center">
                         <div class="btn-group" role="group" aria-label="Basic example">
                             <a href="#" type="button" class="btn btn-outline-success">Editar</a>
-                             <button type="button" class="btn btn-outline-danger" wire:click="confirmDelete({{ $item->id }})">Excluir</button>
+                            <button type="button" class="btn btn-outline-danger"
+                                wire:click="confirmDelete({{ $item->id }})">Excluir</button>
                         </div>
                     </td>
                 </tr>
@@ -53,4 +56,3 @@
         </tbody>
     </table>
 </div>
-

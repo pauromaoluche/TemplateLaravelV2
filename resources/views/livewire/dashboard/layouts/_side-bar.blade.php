@@ -16,7 +16,7 @@
         Padrões do sistema
     </div>
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('dashboard.institutional.index') }}">
+        <a class="nav-link" href="{{ route('dashboard.institutional') }}" wire:navigate>
             <i class="fa fa-building" aria-hidden="true"></i>
             <span>Institucional</span></a>
     </li>
