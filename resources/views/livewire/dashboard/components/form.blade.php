@@ -90,7 +90,7 @@
                 <button type="submit" class="btn btn-success">Salvar</button>
                 <button type="button" class="btn btn-success" wire:click="save(true)">Salvar e adicionar
                     outro</button>
-                <button id="backButton" type="button" class="btn btn-danger">Voltar</button>
+                <a href="{{ route(Str::beforeLast($route, '.')) }}" wire:navigate type="button" class="btn btn-danger" wire:click="back">Voltar</a>
             </div>
         </div>
     </form>
