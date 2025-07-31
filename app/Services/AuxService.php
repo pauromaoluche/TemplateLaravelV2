@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class AuxService
 {
@@ -49,6 +50,8 @@ class AuxService
         }
 
         try {
+            $this->deleteModelImages($instance);
+
             return $instance->delete();
         } catch (QueryException $e) {
             Log::channel('db_errors')->error("Erro de BD ao excluir {$modelClass} (ID: {$id}): " . $e->getMessage());
@@ -77,13 +80,43 @@ class AuxService
         }
 
         try {
-            return $modelClass::whereIn('id', $ids)->delete();
+            $allDeleted = true;
+            foreach ($instances as $instance) {
+                $this->deleteModelImages($instance);
+
+                if (!$instance->delete()) {
+                    $allDeleted = false;
+                }
+            }
+            return $allDeleted;
         } catch (QueryException $e) {
             Log::channel('db_errors')->error("Erro de BD ao excluir múltiplos {$modelClass} (IDs: " . implode(',', $ids) . "): " . $e->getMessage());
             throw new Exception("Não foi possível excluir os itens devido a um erro no banco de dados.");
         } catch (Exception $e) {
             Log::error("Erro inesperado ao excluir múltiplos {$modelClass} (IDs: " . implode(',', $ids) . "): " . $e->getMessage());
             throw new Exception("Ocorreu um erro inesperado ao tentar excluir os itens.");
+        }
+    }
+
+    private function deleteModelImages(Model $instance): void
+    {
+        if (method_exists($instance, 'images')) {
+            try {
+                $instance->load('images');
+
+                // Itera sobre todas as imagens associadas
+                foreach ($instance->images as $image) {
+                    if (Storage::disk('public')->exists($image->path)) {
+                        Storage::disk('public')->delete($image->path);
+                    }
+
+                    $image->delete();
+                }
+            } catch (Exception $e) {
+                Log::error("Erro ao excluir imagens para o modelo " . get_class($instance) . " com ID " . $instance->id . ": " . $e->getMessage());
+
+                throw new Exception("Não foi possível excluir as imagens do item devido a um erro: " . $e->getMessage());
+            }
         }
     }
 }
