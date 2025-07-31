@@ -36,4 +36,5 @@ return [
     'time' => 'hora',
     'username' => 'usuário',
     'year' => 'ano',
+    'images.*' => 'Imagens'
 ];
