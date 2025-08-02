@@ -28,10 +28,10 @@ foreach ($items as $key => $item) {
         });
     }
 
-    if (!Breadcrumbs::exists("{$key}.show") && Route::has("{$key}.show")) {
-        Breadcrumbs::for("{$key}.show", function (BreadcrumbTrail $trail, $id) use ($item, $key) {
-            $trail->parent("{$key}.index");
-            $trail->push("Editar $item", route("{$key}.show", $id));
+    if (!Breadcrumbs::exists("{$key}.edit") && Route::has("{$key}.edit")) {
+        Breadcrumbs::for("{$key}.edit", function (BreadcrumbTrail $trail, $id) use ($item, $key) {
+            $trail->parent($key);
+            $trail->push("Editar $item", route("{$key}.edit", $id));
         });
     }
 }
