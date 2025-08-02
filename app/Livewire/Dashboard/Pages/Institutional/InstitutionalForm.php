@@ -9,6 +9,7 @@ class InstitutionalForm extends Component
 {
     public string $model;
     public array $columns = [];
+    public int $id;
 
     public function mount()
     {
