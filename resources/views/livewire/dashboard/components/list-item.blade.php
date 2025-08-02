@@ -46,7 +46,7 @@
                     @endforeach
                     <td class="text-center">
                         <div class="btn-group" role="group" aria-label="Basic example">
-                            <a href="#" type="button" class="btn btn-outline-success">Editar</a>
+                            <a href="{{ route('dashboard.institutional.edit', ['id' => $item->id]) }}" wire:navigate type="button" class="btn btn-outline-success">Editar</a>
                             <button type="button" class="btn btn-outline-danger"
                                 wire:click="confirmDelete({{ $item->id }})">Excluir</button>
                         </div>
