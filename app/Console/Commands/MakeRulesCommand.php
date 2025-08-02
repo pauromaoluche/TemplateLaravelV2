@@ -118,10 +118,13 @@ class MakeRulesCommand extends Command
                 ->exists();
 
             if ($isUnique) {
-                $ruleParts[] = "unique:{$table},{$column}";
-            }
-
-            $rules[] = "'$column' => '" . implode('|', $ruleParts) . "',";
+                $ruleParts[] = "Rule::unique('{$table}', '{$column}')->ignore(\$id)";
+                $rules[] = "'$column' => [" . implode(', ', array_map(function ($rule) {
+                    return Str::startsWith($rule, 'Rule::') ? $rule : "'$rule'";
+                }, $ruleParts)) . "],";
+            } else {
+                $rules[] = "'$column' => '" . implode('|', $ruleParts) . "',";
+            };
         }
 
         return implode("\n            ", $rules);
