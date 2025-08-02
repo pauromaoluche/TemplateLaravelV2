@@ -13,6 +13,17 @@ use Illuminate\Support\Facades\Storage;
 class AuxService
 {
 
+    public function find(string $modelClass, int $id): Model
+    {
+        $instance = $modelClass::find($id);
+
+        if (!$instance) {
+            throw new Exception("Item  não encontrado.");
+        }
+
+        return $instance;
+    }
+
     public function store(string $modelClass, $data): Model
     {
         try {
@@ -26,11 +37,37 @@ class AuxService
             $instance = $modelClass::create($data);
             return $instance;
         } catch (QueryException $e) {
-            Log::channel('db_errors')->error("Erro de BD ao criar {$modelClass}: " . $e->getMessage(), ['data' => $data]);
+            Log::channel('dbErrors')->error("Erro de BD ao criar {$modelClass}: " . $e->getMessage(), ['data' => $data]);
             throw new Exception("Não foi possível criar o item devido a um erro no banco de dados.");
         } catch (Exception $e) {
             Log::error("Erro inesperado ao criar {$modelClass}: " . $e->getMessage());
             throw new Exception("Ocorreu um erro inesperado ao tentar criar o item. Contate o administrador!");
+        }
+    }
+
+    public function update(string $modelClass, $id, $data): Model
+    {
+        try {
+            $instance = $modelClass::findOrFail($id);
+
+            Gate::authorize('update', $instance);
+        } catch (AuthorizationException $e) {
+            Log::channel('saas')->warning("Permissão negada para atualizar {$modelClass} (ID: {$id}) pelo usuário " . optional(auth()->user())->id . ": " . $e->getMessage());
+            throw new AuthorizationException('Você não tem permissão para atualizar este item.');
+        } catch (Exception $e) {
+            Log::error("Item a ser atualizado não encontrado: " . $e->getMessage());
+            throw new Exception("Item a ser atualizado não encontrado.");
+        }
+
+        try {
+            $instance->update($data);
+            return $instance;
+        } catch (QueryException $e) {
+            Log::channel('dbErrors')->error("Erro de BD ao atualizar {$modelClass} (ID: {$id}): " . $e->getMessage(), ['data' => $data]);
+            throw new Exception("Não foi possível atualizar o item devido a um erro no banco de dados.");
+        } catch (Exception $e) {
+            Log::error("Erro inesperado ao atualizar {$modelClass} (ID: {$id}): " . $e->getMessage());
+            throw new Exception("Ocorreu um erro inesperado ao tentar atualizar o item. Contate o administrador!");
         }
     }
 
@@ -54,7 +91,7 @@ class AuxService
 
             return $instance->delete();
         } catch (QueryException $e) {
-            Log::channel('db_errors')->error("Erro de BD ao excluir {$modelClass} (ID: {$id}): " . $e->getMessage());
+            Log::channel('dbErrors')->error("Erro de BD ao excluir {$modelClass} (ID: {$id}): " . $e->getMessage());
             throw new Exception("Não foi possível excluir o item devido a um erro no banco de dados.");
         } catch (Exception $e) {
             Log::error("Erro inesperado ao excluir {$modelClass} (ID: {$id}): " . $e->getMessage());
@@ -90,7 +127,7 @@ class AuxService
             }
             return $allDeleted;
         } catch (QueryException $e) {
-            Log::channel('db_errors')->error("Erro de BD ao excluir múltiplos {$modelClass} (IDs: " . implode(',', $ids) . "): " . $e->getMessage());
+            Log::channel('dbErrors')->error("Erro de BD ao excluir múltiplos {$modelClass} (IDs: " . implode(',', $ids) . "): " . $e->getMessage());
             throw new Exception("Não foi possível excluir os itens devido a um erro no banco de dados.");
         } catch (Exception $e) {
             Log::error("Erro inesperado ao excluir múltiplos {$modelClass} (IDs: " . implode(',', $ids) . "): " . $e->getMessage());
