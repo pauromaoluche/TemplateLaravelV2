@@ -20,7 +20,10 @@ class Form extends Component
     public array $columns;
     public string $model;
     public $images = [];
+    public array $existingImages = [];
     public string $activeTab = 'home';
+    public ?int $id = null;
+    public $data;
 
     protected AuxService $auxService;
 
@@ -31,11 +34,23 @@ class Form extends Component
         $this->auxService = $auxService;
     }
 
-    public function mount()
+    public function mount(?int $id = null)
     {
-        $this->form->setModel($this->model);
+        $this->id = $id;
+
+        if ($this->id) {
+            $this->form->setModel($this->model, $this->id);
+            $modelInstance = $this->auxService->find($this->model, $this->id);
+            $this->existingImages = $modelInstance->images()->get()->toArray();
+            $this->form->setData($modelInstance->toArray());
+        }
     }
-    //Regras para validar imagem
+
+    public function hydrate()
+    {
+        $this->form->setModel($this->model, $this->id);
+    }
+
     protected function rules()
     {
         return [
@@ -81,13 +96,14 @@ class Form extends Component
     {
         $this->validate();
 
-        $this->form->validate();
-
         try {
-
             $savedModel = null;
 
-            $savedModel = $this->auxService->store($this->model, $this->form->data);
+            if ($this->id) {
+                $savedModel = $this->auxService->update($this->model, $this->id, $this->form->data);
+            } else {
+                $savedModel = $this->auxService->store($this->model, $this->form->data);
+            }
 
             if ($savedModel && !empty($this->images)) {
                 foreach ($this->images as $imageFile) {
