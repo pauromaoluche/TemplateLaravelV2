@@ -12,19 +12,35 @@
             </li>
         </ul>
 
-        <div class="tab-content" id="myTabContent">
+        <div class="tab-content py-3" id="myTabContent">
             <div class="tab-pane fade {{ $activeTab === 'home' ? 'show active' : '' }}" id="home" role="tabpanel">
                 @foreach ($columns as $key => $column)
                     @if ($key !== 'active')
                         <div class="mb-3">
-                            <label for="{{ $key }}"
-                                class="form-label labelForm">{{ __("columns.$key") }}</label>
-                            <input name="form.data.{{ $key }}" wire:model.live="form.data.{{ $key }}"
-                                type="{{ $column }}" class="form-control" id="{{ $key }}">
+                            @if ($key == 'code')
+                                @can('admin')
+                                    <label for="{{ $key }}"
+                                        class="form-label labelForm">{{ __("columns.$key") }}</label>
+                                    <input name="form.data.{{ $key }}"
+                                        wire:model.live="form.data.{{ $key }}" type="{{ $column }}"
+                                        class="form-control" id="{{ $key }}">
 
-                            @error('form.data.' . $key)
-                                <span class="text-danger text-sm">{{ $message }}</span>
-                            @enderror
+                                    @error('form.data.' . $key)
+                                        <span class="text-danger text-sm">{{ $message }}</span>
+                                    @enderror
+                                @endcan
+                            @else
+                                <label for="{{ $key }}"
+                                    class="form-label labelForm">{{ __("columns.$key") }}</label>
+                                <input name="form.data.{{ $key }}"
+                                    wire:model.live="form.data.{{ $key }}" type="{{ $column }}"
+                                    class="form-control" id="{{ $key }}">
+
+                                @error('form.data.' . $key)
+                                    <span class="text-danger text-sm">{{ $message }}</span>
+                                @enderror
+                            @endif
+
                         </div>
                     @else
                         <div class="mb-3 form-check">
@@ -97,7 +113,8 @@
                                     @if (is_object($image) && method_exists($image, 'temporaryUrl'))
                                         <div class="card me-3 my-3" style="width: 250px;">
                                             <div class="card-header d-flex justify-content-end">
-                                                <button type="button" class="btn-close bg-transparent" aria-label="Close"
+                                                <button type="button" class="btn-close bg-transparent"
+                                                    aria-label="Close"
                                                     wire:click="removeTemporaryImage({{ $key }})">&times;</button>
                                             </div>
                                             <div class="card-body p-1 text-center">
@@ -114,8 +131,9 @@
             </div>
             <nav class="d-none">
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <button class="nav-link active" id="nav-form-tab" data-bs-toggle="tab" data-bs-target="#nav-form"
-                        type="button" role="tab" aria-controls="nav-form" aria-selected="true">Formulário</button>
+                    <button class="nav-link active" id="nav-form-tab" data-bs-toggle="tab"
+                        data-bs-target="#nav-form" type="button" role="tab" aria-controls="nav-form"
+                        aria-selected="true">Formulário</button>
                     <button class="nav-link" id="nav-image-tab" data-bs-toggle="tab" data-bs-target="#nav-image"
                         type="button" role="tab" aria-controls="nav-image"
                         aria-selected="false">Imagem</button>

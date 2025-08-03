@@ -1,13 +1,15 @@
 <div class="shadow-lg mb-5 bg-body-tertiary rounded border-left-primary" style="background-color: white">
     @if ($route !== 'menualias')
         <div class="btn d-flex justify-content-end">
-            <div class="btn-group" role="group" aria-label="Basic example">
-                <a href="{{ route($route . '.create') }}" wire:navigate type="button" class="btn btn-success">Adicionar</a>
-                @can('admin')
+            @can('admin')
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a href="{{ route($route . '.create') }}" wire:navigate type="button"
+                        class="btn btn-success">Adicionar</a>
+
                     <button type="button" class="btn btn-danger" wire:click="confirmDeleteSelected">Remover
                         Selecionados</button>
-                @endcan
-            </div>
+                </div>
+            @endcan
         </div>
     @endif
     <table class="table table-hover table-striped table-bordered ">
@@ -46,9 +48,12 @@
                     @endforeach
                     <td class="text-center">
                         <div class="btn-group" role="group" aria-label="Basic example">
-                            <a href="{{ route('dashboard.institutional.edit', ['id' => $item->id]) }}" wire:navigate type="button" class="btn btn-outline-success">Editar</a>
-                            <button type="button" class="btn btn-outline-danger"
-                                wire:click="confirmDelete({{ $item->id }})">Excluir</button>
+                            <a href="{{ route('dashboard.institutional.edit', ['id' => $item->id]) }}" wire:navigate
+                                type="button" class="btn btn-outline-success">Editar</a>
+                            @can('delete', $item)
+                                <button type="button" class="btn btn-outline-danger"
+                                    wire:click="confirmDelete({{ $item->id }})">Excluir</button>
+                            @endcan
                         </div>
                     </td>
                 </tr>
