@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -132,6 +133,35 @@ class AuxService
         } catch (Exception $e) {
             Log::error("Erro inesperado ao excluir múltiplos {$modelClass} (IDs: " . implode(',', $ids) . "): " . $e->getMessage());
             throw new Exception("Ocorreu um erro inesperado ao tentar excluir os itens.");
+        }
+    }
+
+    public function uploadImage(string $modelClass, int $id, array $images): bool
+    {
+        $instance = $modelClass::find($id);
+
+        if (!$instance) {
+            throw new Exception("Item não encontrado.");
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $folderPath = 'images/' . strtolower(class_basename($modelClass));
+
+            foreach ($images as $imageFile) {
+                $path = $imageFile->store($folderPath, 'public');
+
+                $instance->images()->create([
+                    'path' => $path,
+                ]);
+            }
+
+            DB::commit();
+            return true;
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw new Exception("Ocorreu um erro inesperado ao tentar salvar as imagens.");
         }
     }
 

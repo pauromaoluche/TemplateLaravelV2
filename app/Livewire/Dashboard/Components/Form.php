@@ -106,13 +106,7 @@ class Form extends Component
             }
 
             if ($savedModel && !empty($this->images)) {
-                foreach ($this->images as $imageFile) {
-                    $path = $imageFile->store(Str::beforeLast($this->route, '.'), 'public');
-
-                    $savedModel->images()->create([
-                        'path' => $path,
-                    ]);
-                }
+                $this->auxService->uploadImage($this->model, $savedModel->id, $this->images);
                 $this->images = [];
             }
 
