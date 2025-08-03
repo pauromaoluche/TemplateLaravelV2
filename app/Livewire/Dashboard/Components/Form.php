@@ -120,8 +120,10 @@ class Form extends Component
 
             if ($savedModel && !empty($this->images)) {
                 $this->auxService->uploadImage($this->model, $savedModel->id, $this->images);
-                $this->auxService->removeImage($this->imagesToRemove);
                 $this->images = [];
+            }
+            if (!empty($this->imagesToRemove)) {
+                $this->auxService->removeImage($this->imagesToRemove);
             }
 
             DB::commit();

@@ -81,7 +81,7 @@
                                         </div>
                                         <div class="card-body p-1 text-center">
                                             <img src="{{ asset('storage/' . $image['path']) }}"
-                                                class="img-fluid rounded" style="max-height: 250px; object-fit: cover;">
+                                                class="img-fluid rounded" style="max-height: 150px; object-fit: cover;">
                                         </div>
                                     </div>
                                 @endforeach
@@ -102,7 +102,7 @@
                                             </div>
                                             <div class="card-body p-1 text-center">
                                                 <img src="{{ $image->temporaryUrl() }}" class="img-fluid rounded"
-                                                    style="max-height: 250px; object-fit: cover;">
+                                                    style="max-height: 150px; object-fit: cover;">
                                             </div>
                                         </div>
                                     @endif
