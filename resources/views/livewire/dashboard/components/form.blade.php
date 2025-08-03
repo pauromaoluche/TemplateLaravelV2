@@ -68,17 +68,20 @@
                         <span class="text-danger text-sm">{{ $message }}</span>
                     @enderror
 
-                    <div class="images">
+                    <div class="images image-load">
                         @if (!empty($existingImages))
                             <div class="d-flex flex-wrap image-preview-grid">
                                 @foreach ($existingImages as $image)
-                                    <div class="card me-3 my-3" style="width: 250px;">
-                                        <div class="card-header d-flex justify-content-end">
-                                            <button type="button" class="btn-close" aria-label="Close">&times;</button>
+                                    <div class="card me-3 my-3 @if (in_array($image['id'], $imagesToRemove)) image-remove @endif"
+                                        style="width: 250px;">
+                                        <div class="card-header d-flex justify-content-end bg-white border-0">
+                                            <button type="button" class="btn-close bg-white"
+                                                wire:click="toggleImageRemoval({{ $image['id'] }})"
+                                                aria-label="Close">&times;</button>
                                         </div>
                                         <div class="card-body p-1 text-center">
-                                            <img src="{{ asset('storage/' . $image['path']) }}" class="img-fluid rounded"
-                                                style="max-height: 250px; object-fit: cover;">
+                                            <img src="{{ asset('storage/' . $image['path']) }}"
+                                                class="img-fluid rounded" style="max-height: 250px; object-fit: cover;">
                                         </div>
                                     </div>
                                 @endforeach
@@ -94,10 +97,8 @@
                                     @if (is_object($image) && method_exists($image, 'temporaryUrl'))
                                         <div class="card me-3 my-3" style="width: 250px;">
                                             <div class="card-header d-flex justify-content-end">
-                                                {{-- Botão para remover pré-visualização temporária individualmente --}}
                                                 <button type="button" class="btn-close" aria-label="Close"
-                                                    wire:click="removeTemporaryImage({{ $key }})"
-                                                    {{-- Chama o novo método com o índice --}}>&times;</button>
+                                                    wire:click="removeTemporaryImage({{ $key }})">&times;</button>
                                             </div>
                                             <div class="card-body p-1 text-center">
                                                 <img src="{{ $image->temporaryUrl() }}" class="img-fluid rounded"
@@ -113,9 +114,8 @@
             </div>
             <nav class="d-none">
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <button class="nav-link active" id="nav-form-tab" data-bs-toggle="tab"
-                        data-bs-target="#nav-form" type="button" role="tab" aria-controls="nav-form"
-                        aria-selected="true">Formulário</button>
+                    <button class="nav-link active" id="nav-form-tab" data-bs-toggle="tab" data-bs-target="#nav-form"
+                        type="button" role="tab" aria-controls="nav-form" aria-selected="true">Formulário</button>
                     <button class="nav-link" id="nav-image-tab" data-bs-toggle="tab" data-bs-target="#nav-image"
                         type="button" role="tab" aria-controls="nav-image"
                         aria-selected="false">Imagem</button>
@@ -126,7 +126,8 @@
                     <button type="submit" class="btn btn-success">Salvar</button>
                     <button type="button" class="btn btn-success" wire:click="save(true)">Salvar e adicionar
                         outro</button>
-                    <a href="{{ route(Str::beforeLast($this->route, '.')) }}" class="btn btn-danger" wire:click="back">Voltar</a>
+                    <a href="{{ route(Str::beforeLast($this->route, '.')) }}" class="btn btn-danger"
+                        wire:click="back">Voltar</a>
                 </div>
             </div>
     </form>

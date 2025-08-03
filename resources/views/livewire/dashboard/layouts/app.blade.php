@@ -7,7 +7,7 @@
 
     <title>Laravel - {{ $title ?? 'Dashboard' }}</title>
 
-    @vite(['resources/js/dashboard/app.js', 'resources/css/dashboard/sb-admin-2.css'])
+    @vite(['resources/js/dashboard/app.js', 'resources/css/dashboard/sb-admin-2.css', 'resources/css/dashboard/dashboard.css'])
 </head>
 
 <body id="page-top">

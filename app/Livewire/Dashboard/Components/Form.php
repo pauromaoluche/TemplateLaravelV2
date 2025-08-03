@@ -8,6 +8,7 @@ use Exception;
 use Livewire\Component;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
 use Illuminate\Validation\Rules\File;
@@ -21,6 +22,7 @@ class Form extends Component
     public string $model;
     public $images = [];
     public array $existingImages = [];
+    public array $imagesToRemove = [];
     public string $activeTab = 'home';
     public ?int $id = null;
     public $data;
@@ -92,9 +94,20 @@ class Form extends Component
         }
     }
 
+    public function toggleImageRemoval(int $imageId): void
+    {
+        if (($key = array_search($imageId, $this->imagesToRemove)) !== false) {
+            unset($this->imagesToRemove[$key]);
+        } else {
+            $this->imagesToRemove[] = $imageId;
+        }
+    }
+
     public function save(bool $addOther = false)
     {
         $this->validate();
+
+        DB::beginTransaction();
 
         try {
             $savedModel = null;
@@ -107,8 +120,11 @@ class Form extends Component
 
             if ($savedModel && !empty($this->images)) {
                 $this->auxService->uploadImage($this->model, $savedModel->id, $this->images);
+                $this->auxService->removeImage($this->imagesToRemove);
                 $this->images = [];
             }
+
+            DB::commit();
 
             if ($addOther) {
                 return $this->dispatch('swal:redirect', [
@@ -120,10 +136,12 @@ class Form extends Component
             }
             return redirect()->route(Str::beforeLast($this->route, '.'));
         } catch (AuthorizationException $e) {
+            DB::rollBack();
             $this->dispatch('swal:message', [
                 'icon' => 'error', 'title' => 'Acesso negado!', 'text' => $e->getMessage()
             ]);
         } catch (Exception $e) {
+            DB::rollBack();
             $this->dispatch('swal:message', [
                 'icon' => 'error', 'title' => 'Ocorreu um erro', 'text' => $e->getMessage()
             ]);

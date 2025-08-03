@@ -1,0 +1,10 @@
+.image-load .card-header {
+    padding: 0px;
+}
+.image-load .card-header .btn-close {
+    border: none;
+}
+
+.image-remove {
+    border: 5px inset red;
+}

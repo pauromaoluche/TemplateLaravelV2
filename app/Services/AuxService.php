@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Image;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\Model;
@@ -162,6 +163,33 @@ class AuxService
         } catch (Exception $e) {
             DB::rollBack();
             throw new Exception("Ocorreu um erro inesperado ao tentar salvar as imagens.");
+        }
+    }
+
+    public function removeImage(array $ids): bool
+    {
+
+        $instances = Image::whereIn('id', $ids)->get();
+
+        if ($instances->isEmpty()) {
+            throw new Exception("Nenhum item válido para excluir foi encontrado.");
+        }
+
+        try {
+            $allDeleted = true;
+            foreach ($instances as $instance) {
+
+                if (!$instance->delete()) {
+                    $allDeleted = false;
+                }
+            }
+            return $allDeleted;
+        } catch (QueryException $e) {
+            Log::channel('dbErrors')->error("Erro de BD ao excluir múltiplas Imagens (IDs: " . implode(',', $ids) . "): " . $e->getMessage());
+            throw new Exception("Não foi possível excluir os itens devido a um erro no banco de dados.");
+        } catch (Exception $e) {
+            Log::error("Erro inesperado ao excluir múltiplas Imagens (IDs: " . implode(',', $ids) . "): " . $e->getMessage());
+            throw new Exception("Ocorreu um erro inesperado ao tentar excluir os itens.");
         }
     }
 
