@@ -129,14 +129,14 @@ class Form extends Component
             DB::commit();
 
             if ($addOther) {
+                $message = $this->id ? 'salvo' : 'criado';
                 return $this->dispatch('swal:redirect', [
                     'title' => 'Sucesso',
-                    'text' => 'Item criado com sucesso, iremos te redirecionar para criar outro.',
+                    'text' => "Item {$message} com sucesso, iremos te redirecionar para criar outro.",
                     'icon' => 'success',
-                    'redirectUrl' => $this->route
+                    'redirectUrl' => route(Str::beforeLast($this->route, '.') . '.create')
                 ]);
             }
-            return redirect()->route(Str::beforeLast($this->route, '.'));
         } catch (AuthorizationException $e) {
             DB::rollBack();
             $this->dispatch('swal:message', [

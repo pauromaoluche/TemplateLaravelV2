@@ -44,7 +44,7 @@ document.addEventListener('livewire:initialized', () => {
         }).then((result) => {
             if (result.isConfirmed) {
                if (data.redirectUrl) {
-                    window.location.reload();
+                    window.location.href = data.redirectUrl;
                 }
             }
         });
