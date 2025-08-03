@@ -54,7 +54,7 @@
                 role="tabpanel">
                 <div class="mb-3 mt-3">
                     <label for="images" class="form-label">Upload de Imagem(ns)</label>
-                    <input type="file" class="form-control" id="images" wire:model.live="images"
+                    <input type="file" class="form-control p-0 h-auto" id="images" wire:model.live="images"
                         accept="image/png, image/gif, image/jpeg" multiple>
 
                     <div wire:loading wire:target="images">
@@ -70,12 +70,12 @@
 
                     <div class="images image-load">
                         @if (!empty($existingImages))
-                            <div class="d-flex flex-wrap image-preview-grid">
+                            <div class="d-flex flex-wrap image-preview-grid py-3">
                                 @foreach ($existingImages as $image)
-                                    <div class="card me-3 my-3 @if (in_array($image['id'], $imagesToRemove)) image-remove @endif"
+                                    <div class="card me-3 mx-1 my-2 @if (in_array($image['id'], $imagesToRemove)) image-remove @endif"
                                         style="width: 250px;">
-                                        <div class="card-header d-flex justify-content-end bg-white border-0">
-                                            <button type="button" class="btn-close bg-white"
+                                        <div class="card-header d-flex justify-content-end">
+                                            <button type="button" class="btn-close bg-transparent"
                                                 wire:click="toggleImageRemoval({{ $image['id'] }})"
                                                 aria-label="Close">&times;</button>
                                         </div>
@@ -97,7 +97,7 @@
                                     @if (is_object($image) && method_exists($image, 'temporaryUrl'))
                                         <div class="card me-3 my-3" style="width: 250px;">
                                             <div class="card-header d-flex justify-content-end">
-                                                <button type="button" class="btn-close" aria-label="Close"
+                                                <button type="button" class="btn-close bg-transparent" aria-label="Close"
                                                     wire:click="removeTemporaryImage({{ $key }})">&times;</button>
                                             </div>
                                             <div class="card-body p-1 text-center">

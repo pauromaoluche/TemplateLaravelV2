@@ -137,6 +137,7 @@ class Form extends Component
                     'redirectUrl' => route(Str::beforeLast($this->route, '.') . '.create')
                 ]);
             }
+            return redirect()->route(Str::beforeLast($this->route, '.'));
         } catch (AuthorizationException $e) {
             DB::rollBack();
             $this->dispatch('swal:message', [
