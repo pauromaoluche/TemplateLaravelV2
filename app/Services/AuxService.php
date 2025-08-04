@@ -179,6 +179,9 @@ class AuxService
             $allDeleted = true;
             foreach ($instances as $instance) {
 
+                if (Storage::disk('public')->exists($instance->path)) {
+                    Storage::disk('public')->delete($instance->path);
+                }
                 if (!$instance->delete()) {
                     $allDeleted = false;
                 }
