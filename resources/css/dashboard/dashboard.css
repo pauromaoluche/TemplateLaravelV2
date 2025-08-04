@@ -8,3 +8,8 @@
 .image-remove {
     border: 5px inset red;
 }
+
+input[type="file"] {
+    padding: 0;
+    height: auto;
+}

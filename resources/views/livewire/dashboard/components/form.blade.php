@@ -70,7 +70,7 @@
                 role="tabpanel">
                 <div class="mb-3 mt-3">
                     <label for="images" class="form-label">Upload de Imagem(ns)</label>
-                    <input type="file" class="form-control p-0 h-auto" id="images" wire:model.live="images"
+                    <input type="file" class="form-control" id="images" wire:model.live="images"
                         accept="image/png, image/gif, image/jpeg" multiple>
 
                     <div wire:loading wire:target="images">

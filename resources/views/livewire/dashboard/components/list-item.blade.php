@@ -2,7 +2,7 @@
     @if ($route !== 'menualias')
         <div class="btn d-flex justify-content-end">
             @can('admin')
-                <div class="btn-group" role="group" aria-label="Basic example">
+                <div class="btn-group" role="group">
                     <a href="{{ route($route . '.create') }}" wire:navigate type="button"
                         class="btn btn-success">Adicionar</a>
 
@@ -47,8 +47,8 @@
                         @endif
                     @endforeach
                     <td class="text-center">
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <a href="{{ route('dashboard.institutional.edit', ['id' => $item->id]) }}" wire:navigate
+                        <div class="btn-group" role="group">
+                            <a href="{{ route($route . '.edit', ['id' => $item->id]) }}" wire:navigate
                                 type="button" class="btn btn-outline-success">Editar</a>
                             @can('delete', $item)
                                 <button type="button" class="btn btn-outline-danger"
