@@ -24,7 +24,7 @@ return [
     'minute' => 'minuto',
     'mobile' => 'celular',
     'month' => 'mês',
-    'name' => 'nome',
+    'name' => 'Nome',
     'password_confirmation' => 'confirmação da senha',
     'password' => 'senha',
     'phone' => 'telefone',
@@ -36,5 +36,6 @@ return [
     'time' => 'hora',
     'username' => 'usuário',
     'year' => 'ano',
-    'images.*' => 'Imagens'
+    'images.*' => 'Imagens',
+    'email' => 'E-mail'
 ];
