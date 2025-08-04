@@ -4,6 +4,7 @@ namespace App\Livewire\Dashboard\Pages\Institutional;
 
 use App\Models\Institutional;
 use Illuminate\Support\Facades\Route;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
 class InstitutionalList extends Component
@@ -16,6 +17,7 @@ class InstitutionalList extends Component
         $this->model = Institutional::class;
     }
 
+    #[Title('Institucional')]
     public function render()
     {
         return view('livewire.dashboard.pages.institutional.institutional-list')->layout('livewire.dashboard.layouts.app');

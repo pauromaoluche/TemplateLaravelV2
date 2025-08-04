@@ -3,6 +3,7 @@
 namespace App\Livewire\Dashboard\Pages\Institutional;
 
 use App\Models\Institutional;
+use Livewire\Attributes\Title;
 use Livewire\Component;
 
 class InstitutionalForm extends Component
@@ -18,6 +19,7 @@ class InstitutionalForm extends Component
         $this->columns = $modelInstance->getTableColumnTypesSimple();
     }
 
+    #[Title('Institucional - Editar')]
     public function render()
     {
         return view('livewire.dashboard.pages.institutional.institutional-form')->layout('livewire.dashboard.layouts.app');
