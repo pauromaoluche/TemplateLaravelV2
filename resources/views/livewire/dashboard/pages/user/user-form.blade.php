@@ -10,9 +10,12 @@
                         <div class="small font-italic text-muted mb-4">JPG ou PNG tamanho de 2mb no maximo</div>
                         <div class="mb-3">
                             <label for="formFile" class="form-label">Foto de usuario</label>
-                            <input type="file" class="form-control" wire:model.live="images"
+                            <input type="file" class="form-control" wire:model.live="image"
                                 accept="image/png, image/gif, image/jpeg">
                         </div>
+                        @error('image')
+                            <span class="text-danger text-sm">{{ $message }}</span>
+                        @enderror
                     </div>
                 </div>
             </div>

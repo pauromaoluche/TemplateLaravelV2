@@ -20,7 +20,7 @@ class UserForm extends Component
     public int $id;
     public $profilImage;
     public array $imagesToRemove = [];
-    public $images = [];
+    public $image;
 
     protected AuxService $auxService;
 
@@ -57,14 +57,28 @@ class UserForm extends Component
     protected function rules()
     {
         return [
-            'images' => 'nullable|array',
-            'images.*' => [
+            'image' => 'nullable',
+            'image' => [
                 File::image()
                     ->types(['jpeg', 'png', 'jpg', 'gif'])
                     ->max(2048),
             ],
         ];
     }
+
+    public function updatedImage()
+    {
+        $this->validate([
+            'image' => 'nullable|',
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+    }
+
+    protected $messages = [
+        'image.max' => 'A imagem não pode ter mais de 2MB.',
+        'image.image' => 'O arquivo deve ser uma imagem.',
+        'image.mimes' => 'O tipo de imagem não é permitido.',
+    ];
 
     public function save()
     {
@@ -86,10 +100,10 @@ class UserForm extends Component
                 $savedModel = $this->auxService->store(User::class, $this->form->all());
             }
 
-            if ($savedModel && !empty($this->images)) {
+            if ($savedModel && !empty($this->image)) {
                 $this->auxService->removeImage([$this->profilImage->id]);
-                $this->auxService->uploadImage(User::class, $savedModel->id, $this->images);
-                $this->images = [];
+                $this->auxService->uploadImage(User::class, $savedModel->id, [$this->image]);
+                $this->image = null;
                 $this->reload();
             }
 
