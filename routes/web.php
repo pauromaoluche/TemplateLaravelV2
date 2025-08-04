@@ -5,6 +5,8 @@ use App\Http\Controllers\Web\IndexController;
 use App\Livewire\Dashboard\Pages\Index;
 use App\Livewire\Dashboard\Pages\Institutional\InstitutionalForm;
 use App\Livewire\Dashboard\Pages\Institutional\InstitutionalList;
+use App\Livewire\Dashboard\Pages\User\UserForm;
+use App\Livewire\Dashboard\Pages\User\UserList;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [IndexController::class, 'index'])->name('index');
@@ -17,4 +19,8 @@ Route::prefix('dashboard')->name('dashboard.')->middleware('auth')->group(functi
     Route::get('/institucional', InstitutionalList::class)->name('institutional');
     Route::get('/institucional/Adicionar', InstitutionalForm::class)->name('institutional.create');
     Route::get('/institucional/editar/{id}', InstitutionalForm::class)->name('institutional.edit');
+
+    Route::get('/usuarios', UserList::class)->name('user');
+    Route::get('/usuarios/Adicionar', UserForm::class)->name('user.create');
+    Route::get('/usuario/editar/{id}', UserForm::class)->name('user.edit');
 });
