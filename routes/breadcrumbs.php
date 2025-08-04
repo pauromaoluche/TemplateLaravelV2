@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 $items =
     [
         'dashboard.institutional' => 'Institucional',
+        'dashboard.user' => 'Usuarios',
     ];
 
 Breadcrumbs::for('dashboard.index', function (BreadcrumbTrail $trail) {
