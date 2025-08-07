@@ -12,9 +12,9 @@ class UserList extends Component
 
     public function mount()
     {
-        if (!auth()->user()->is_admin) {
-            return redirect()->route('dashboard.user.edit', ['id' => auth()->user()->id]);
-        }
+        // if (!auth()->user()->is_admin) {
+        //     return redirect()->route('dashboard.user.edit', ['id' => auth()->user()->id]);
+        // }
 
         $this->model = User::class;
     }

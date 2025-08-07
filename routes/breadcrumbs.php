@@ -8,6 +8,7 @@ $items =
     [
         'dashboard.institutional' => 'Institucional',
         'dashboard.user' => 'Usuarios',
+        'dashboard.config' => 'Configurações'
     ];
 
 Breadcrumbs::for('dashboard.index', function (BreadcrumbTrail $trail) {
