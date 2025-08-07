@@ -6,7 +6,7 @@
                     <div class="card-header">Foto de perfil</div>
                     <div class="card-body text-center">
                         <img style="height: 200px" class="img-account-profile rounded-circle mb-2 img-fluid"
-                            src="{{ asset('storage/' . $profilImage->path) }}" alt>
+                            src="{{ isset($profilImage) ? asset('storage/' . $profilImage->path) : '' }}" alt>
                         <div class="small font-italic text-muted mb-4">JPG ou PNG tamanho de 2mb no maximo</div>
                         <div class="mb-3">
                             <label for="formFile" class="form-label">Foto de usuario</label>
@@ -39,6 +39,27 @@
                                 <span class="text-danger text-sm">{{ $message }}</span>
                             @enderror
                         </div>
+                        @can('admin')
+                            <div class="mb-3">
+                                Permissões
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <input type="radio" id="admin" wire:model.live="form.is_admin" value="1"
+                                            required>
+                                        <label class="form-check-label" for="admin">
+                                            admin
+                                        </label>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <input type="radio" id="user" wire:model.live="form.is_admin" value="0"
+                                            required>
+                                        <label class="form-check-label" for="user">
+                                            usuário
+                                        </label>
+                                    </li>
+                                </ul>
+                            </div>
+                        @endcan
                         @can('admin')
                             <div class="mb-3">
                                 <label class="small mb-1" for="password">Senha</label>

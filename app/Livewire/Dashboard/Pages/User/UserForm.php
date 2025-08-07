@@ -17,7 +17,7 @@ class UserForm extends Component
 {
     use WithFileUploads;
 
-    public int $id;
+    public ?int $id = null;
     public $profilImage;
     public array $imagesToRemove = [];
     public $image;
@@ -31,13 +31,14 @@ class UserForm extends Component
         $this->auxService = $auxService;
     }
 
-    public function mount()
+    public function mount(?int $id = null)
     {
-        if ($this->id != auth()->user()->id) {
-            return redirect()->route('dashboard.user.edit', ['id' => auth()->user()->id]);
-        }
+        $this->id = $id;
 
         if ($this->id) {
+            if ($this->id != auth()->user()->id && !auth()->user()->is_admin) {
+                return redirect()->route('dashboard.user.edit', ['id' => auth()->user()->id]);
+            }
             $modelInstance = $this->auxService->find(User::class, $this->id);
 
             $this->form->userId = $this->id;
@@ -49,9 +50,10 @@ class UserForm extends Component
 
     public function reload()
     {
-        $modelInstance = $this->auxService->find(User::class, $this->id);
-
-        $this->profilImage = $modelInstance->images()->first();
+        if ($this->id) {
+            $modelInstance = $this->auxService->find(User::class, $this->id);
+            $this->profilImage = $modelInstance->images()->first();
+        }
     }
 
     protected function rules()
@@ -59,19 +61,12 @@ class UserForm extends Component
         return [
             'image' => 'nullable',
             'image' => [
+                'nullable',
                 File::image()
                     ->types(['jpeg', 'png', 'jpg', 'gif'])
                     ->max(2048),
             ],
         ];
-    }
-
-    public function updatedImage()
-    {
-        $this->validate([
-            'image' => 'nullable|',
-            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
-        ]);
     }
 
     protected $messages = [
@@ -96,25 +91,33 @@ class UserForm extends Component
                     unset($dataToSave['password_confirmation']);
                 }
                 $savedModel = $this->auxService->update(User::class, $this->id, $dataToSave);
+
+                if (!empty($this->image) && $this->profilImage) {
+                    $this->auxService->removeImage([$this->profilImage->id]);
+                }
+
+                $message = 'atualizado';
             } else {
-                $savedModel = $this->auxService->store(User::class, $this->form->all());
+                $savedModel = $this->auxService->store(User::class, $dataToSave);
+                $this->id = $savedModel->id;
+
+                $message = 'criado';
             }
 
             if ($savedModel && !empty($this->image)) {
-                $this->auxService->removeImage([$this->profilImage->id]);
                 $this->auxService->uploadImage(User::class, $savedModel->id, [$this->image]);
                 $this->image = null;
                 $this->reload();
             }
 
-            $message = $this->id ? 'salvo' : 'criado';
-            $this->dispatch('swal:message', [
+            DB::commit();
+
+            return $this->dispatch('swal:redirect', [
                 'title' => 'Sucesso',
                 'text' => "Usuario {$message} com sucesso.",
-                'icon' => 'success'
+                'icon' => 'success',
+                'redirectUrl' => route('dashboard.user.edit', ['id' => $this->id])
             ]);
-
-            DB::commit();
         } catch (AuthorizationException $e) {
             DB::rollBack();
             $this->dispatch('swal:message', [
